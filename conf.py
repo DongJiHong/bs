@@ -81,7 +81,7 @@ class RecordInformation(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer)
     information_id = db.Column(db.Integer)
-    time = db.Column(db.Time)
+    time = db.Column(db.Date)
 
 
 # 图书用户访问记录
@@ -90,7 +90,7 @@ class RecordBook(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer)
     book_id = db.Column(db.Integer)
-    time = db.Column(db.Time)
+    time = db.Column(db.Date)
 
 
 # 名人名言

@@ -1,4 +1,5 @@
 import datetime
+from collections import Counter
 
 from flask import render_template, request, flash, redirect, session, url_for
 from flask_bootstrap import Bootstrap4
@@ -26,6 +27,8 @@ def register():
         label = request.form.getlist('label')
         if not all([username, password, password2]):
             flash('参数不完整')
+        elif len(username) < 4:
+            flash('用户名太短')
         elif password != password2:
             flash('两次密码不一致,请重新输入')
         elif len(password) < 6:
@@ -102,7 +105,7 @@ def book():
     data = aside()
     page = request.args.get('page', 1, type=int)
     limit = 10
-    book = Douban.query.order_by(Douban.score.desc()).paginate(page, per_page=limit)
+    book = Douban.query.paginate(page, per_page=limit)
     return render_template("category.html", book=book.items, douban=data[0],
                            saying=data[1], pagination=book)
 
@@ -234,12 +237,23 @@ def recording_information():
         recording_csdn = RecordInformation.query.filter(RecordInformation.user_id == users.id).order_by(
             RecordInformation.id.desc()).paginate(page, per_page=limit)
         data_csdn = recording_csdn.items
+        page_view = []
         data_csdns = []
         for i in data_csdn:
+            page_view.append(Counter({
+                i.time.strftime("%Y/%m/%d"): 1
+            }))
             data_csdns.append(Csdn.query.filter(Csdn.id == i.information_id).first())
-        return render_template("recording_information.html", data_csdn=data_csdns, csdn=recording_csdn)
+        data = Counter(dict())
+        for item in page_view:
+            data = Counter(dict(data + item))
+        date = [item for item in dict(data).keys()]
+        data = [item for item in dict(data).values()]
+        return render_template("recording_information.html", data_csdn=data_csdns, csdn=recording_csdn, date=date,
+                               data=data)
     except Exception as e:
         print(e)
+        return redirect("/")
 
 
 # 查找资讯浏览记录
@@ -247,7 +261,7 @@ def recording_information():
 def recordingInformation(limit=8):
     keyword = request.args.get('search')
     if keyword == "":
-        return redirect(url_for("book"))
+        return redirect(url_for("recording_information"))
     else:
         page = request.args.get('page', 1, type=int)
         # 按条件查询数据并分页显示
@@ -255,12 +269,22 @@ def recordingInformation(limit=8):
         users = Users.query.filter(Users.username == user).first()
         recording_csdn = RecordInformation.query.filter(RecordInformation.user_id == users.id).all()
         information_id = []
+        page_view = []
         for i in recording_csdn:
             information_id.append(i.information_id)
+            page_view.append(Counter({
+                i.time.strftime("%Y/%m/%d"): 1
+            }))
+        data = Counter(dict())
+        for item in page_view:
+            data = Counter(dict(data + item))
+        date = [item for item in dict(data).keys()]
+        data = [item for item in dict(data).values()]
         pagination = Csdn.query.filter(or_(
             Csdn.title.contains(keyword), Csdn.name.contains(keyword), Csdn.content.contains(keyword)),
             Csdn.id.in_(information_id)).paginate(page, per_page=limit)
-        return render_template("recording_information.html", data_csdn=pagination.items, csdn=pagination)
+        return render_template("recording_information.html", data_csdn=pagination.items, csdn=pagination, date=date,
+                               data=data)
 
 
 # 图书浏览记录
@@ -275,12 +299,22 @@ def recording_book():
         recording_book = RecordBook.query.filter(RecordBook.user_id == users.id).order_by(
             RecordBook.id.desc()).paginate(page, per_page=limit)
         data_book = recording_book.items
+        page_view = []
         data_books = []
         for i in data_book:
+            page_view.append(Counter({
+                i.time.strftime("%Y/%m/%d"): 1
+            }))
             data_books.append(Douban.query.filter(Douban.id == i.book_id).first())
-        return render_template("recording_book.html", data_book=data_books, book=recording_book)
+        data = Counter(dict())
+        for item in page_view:
+            data = Counter(dict(data + item))
+        date = [item for item in dict(data).keys()]
+        data = [item for item in dict(data).values()]
+        return render_template("recording_book.html", data_book=data_books, book=recording_book, date=date, data=data)
     except Exception as e:
         print(e)
+        return redirect("/")
 
 
 # 查找图书浏览记录
@@ -288,7 +322,7 @@ def recording_book():
 def recordingBook(limit=8):
     keyword = request.args.get('search')
     if keyword == "":
-        return redirect(url_for("book"))
+        return redirect(url_for("recording_book"))
     else:
         page = request.args.get('page', 1, type=int)
         # 按条件查询数据并分页显示
@@ -296,12 +330,21 @@ def recordingBook(limit=8):
         users = Users.query.filter(Users.username == user).first()
         recording_book = RecordBook.query.filter(RecordBook.user_id == users.id).all()
         book_id = []
+        page_view = []
         for i in recording_book:
             book_id.append(i.book_id)
+            page_view.append(Counter({
+                i.time.strftime("%Y/%m/%d"): 1
+            }))
+        data = Counter(dict())
+        for item in page_view:
+            data = Counter(dict(data + item))
+        date = [item for item in dict(data).keys()]
+        data = [item for item in dict(data).values()]
         pagination = Douban.query.filter(or_(
             Douban.author.contains(keyword), Douban.book_name.contains(keyword), Douban.content.contains(keyword)
         ), Douban.id.in_(book_id)).paginate(page, per_page=limit)
-        return render_template("recording_book.html", data_book=pagination.items, book=pagination)
+        return render_template("recording_book.html", data_book=pagination.items, book=pagination, date=date, data=data)
 
 
 # 点赞
