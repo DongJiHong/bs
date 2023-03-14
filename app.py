@@ -154,7 +154,8 @@ def information_detail(id):
             label = ",".join(list(set(label.split(","))))
             Users.query.filter_by(id=users.id).update({Users.label: label}, synchronize_session=False)
             db.session.commit()
-            new_record = RecordInformation(user_id=users.id, information_id=id)
+            time = datetime.date.today()
+            new_record = RecordInformation(user_id=users.id, information_id=id, time=time)
             db.session.add(new_record)
         db.session.commit()
     except Exception as e:
@@ -175,7 +176,8 @@ def book_detail(id):
             label = str(users.label).lower() + "," + str(data.label).lower()
             label = ",".join(list(set(label.split(","))))
             Users.query.filter_by(id=users.id).update({Users.label: label}, synchronize_session=False)
-            new_record = RecordBook(user_id=users.id, book_id=id)
+            time = datetime.date.today()
+            new_record = RecordBook(user_id=users.id, book_id=id, time=time)
             db.session.add(new_record)
             db.session.commit()
     except Exception as e:
