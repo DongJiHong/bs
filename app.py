@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap4
 from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from CF_USER_PYTHON import InformationItemRecommend, BookItemRecommend
+from CF_ITEM_PYTHON import InformationItemRecommend, BookItemRecommend
 from conf import *
 
 bootstrap = Bootstrap4(app)
