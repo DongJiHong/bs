@@ -88,6 +88,20 @@ def index():
                            saying=data[1], pagination=data_trend)
 
 
+# 查找校园热点
+@app.route('/find_trends', methods=['GET', 'POST'])
+def find_trends(limit=10):
+    keyword = request.args.get('search')
+    if keyword == "":
+        return redirect(url_for("/"))
+    page = request.args.get('page', 1, type=int)
+    data_trend = Trends.query.filter(Trends.title.contains(keyword)).order_by(
+        Trends.pub_time.desc()).paginate(page, per_page=limit)
+    data = aside()
+    return render_template("index.html", trends=data_trend.items, douban=data[0],
+                           saying=data[1], pagination=data_trend)
+
+
 # 校园风光
 @app.route('/scene/')
 def scene():
