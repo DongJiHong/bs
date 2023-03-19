@@ -28,10 +28,6 @@ NAVBAR
 <nav class="topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
     <div class="container">
         <a class="navbar-brand" href="/"><strong>Mundana</strong></a>
-        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
-                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="navbar-collapse collapse" id="navbarColor02" style="">
             <ul class="navbar-nav mr-auto d-flex align-items-center">
                 <li class="nav-item">
@@ -42,6 +38,9 @@ NAVBAR
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/recommend_information/">个性化推荐</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/scene/">校园风光</a>
                 </li>
                 <li class="nav-item" style="margin-left: 10px ;width: 500px">
                     <form action="{{ url_for("recordingInformation") }}" method="GET">

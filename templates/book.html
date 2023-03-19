@@ -28,20 +28,19 @@ NAVBAR
 <nav class="topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
     <div class="container">
         <a class="navbar-brand" href="/"><strong>Mundana</strong></a>
-        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
-                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="navbar-collapse collapse" id="navbarColor02" style="">
             <ul class="navbar-nav mr-auto d-flex align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="/information/">资讯</a>
+                    <a class="nav-link" href="/information/" style="padding: 5px 5px 5px 5px">资讯</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/book/">书籍</a>
+                    <a class="nav-link" href="/book/" style="padding: 5px 5px 5px 5px">书籍</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/recommend_book/">个性化推荐</a>
+                    <a class="nav-link" href="/recommend_book/" style="padding: 5px 5px 5px 5px">个性化推荐</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/scene/">校园风光</a>
                 </li>
                 <li class="nav-item" style="width: 500px">
                     <form action="{{ url_for("find_book") }}" method="GET">

@@ -101,6 +101,25 @@ class Saying(db.Model):
     content = db.Column(db.Text)  # 内容
 
 
+# 校园动态
+class Trends(db.Model):
+    __tablename__ = "trends"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(1000))  # 标题
+    pub_time = db.Column(db.String(50))  # 发布时间
+    url = db.Column(db.String(100))  # 详情页url
+
+
+# 校园风光
+class Scene(db.Model):
+    __tablename__ = "scene"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    title = db.Column(db.String(1000))  # title
+    img_url = db.Column(db.String(100))  # 图片url
+    browse = db.Column(db.Integer)
+    time = db.Column(db.String(50))
+
+
 # 旁白推荐和名言
 def aside():
     data_douban = Douban.query.filter().order_by(func.rand()).limit(9)

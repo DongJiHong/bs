@@ -80,12 +80,23 @@ def quit():
 # 主页
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    limit = 8
+    limit = 12
     page = request.args.get('page', 1, type=int)
-    data_csdn = Csdn.query.order_by(Csdn.browse.desc()).paginate(page, per_page=limit)
+    data_trend = Trends.query.order_by(Trends.pub_time.desc()).paginate(page, per_page=limit)
     data = aside()
-    return render_template("index.html", csdn=data_csdn.items, douban=data[0],
-                           saying=data[1], pagination=data_csdn)
+    return render_template("index.html", trends=data_trend.items, douban=data[0],
+                           saying=data[1], pagination=data_trend)
+
+
+# 校园风光
+@app.route('/scene/')
+def scene():
+    limit = 9
+    page = request.args.get('page', 1, type=int)
+    data_scene = Scene.query.order_by(func.rand()).paginate(page, per_page=limit)
+    data = aside()
+    return render_template("scene.html", scene=data_scene.items, douban=data[0],
+                           saying=data[1], pagination=data_scene)
 
 
 # 资讯
@@ -106,7 +117,7 @@ def book():
     page = request.args.get('page', 1, type=int)
     limit = 10
     book = Douban.query.paginate(page, per_page=limit)
-    return render_template("category.html", book=book.items, douban=data[0],
+    return render_template("book.html", book=book.items, douban=data[0],
                            saying=data[1], pagination=book)
 
 
@@ -123,7 +134,7 @@ def find_book(limit=12):
             Douban.author.contains(keyword), Douban.book_name.contains(keyword), Douban.content.contains(keyword)
         )).paginate(page, per_page=limit)
         data = aside()
-        return render_template("category.html", book=pagination.items, douban=data[0],
+        return render_template("book.html", book=pagination.items, douban=data[0],
                                saying=data[1], pagination=pagination)
 
 
