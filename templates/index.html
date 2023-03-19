@@ -99,14 +99,14 @@ MAIN
 <div class="container">
     <div class="row justify-content-between">
         <div class="col-md-8">
-            <h5 class="font-weight-bold spanborder"><span>热点资讯</span></h5>
+            <h5 class="font-weight-bold spanborder"><span>校园热点</span></h5>
             {% for i in trends %}
                 <div class="mb-3 d-flex justify-content-between">
                     <div class="pr-3">
-                        <h2 class="mb-1 h4 font-weight-bold">
+                        <h3 class="mb-1 h4 font-weight-bold">
                             <a class="text-dark" href="{{ i.url }}"
                                target="_blank">{{ i.title }}</a>
-                        </h2>
+                        </h3>
                     </div>
                     <p>{{ i.pub_time }}</p>
                 </div>

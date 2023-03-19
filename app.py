@@ -80,7 +80,7 @@ def quit():
 # 主页
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    limit = 12
+    limit = 10
     page = request.args.get('page', 1, type=int)
     data_trend = Trends.query.order_by(Trends.pub_time.desc()).paginate(page, per_page=limit)
     data = aside()
