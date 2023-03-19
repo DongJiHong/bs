@@ -123,7 +123,7 @@ def book():
 
 # 查找图书，并分页显示
 @app.route("/find_book/")
-def find_book(limit=12):
+def find_book(limit=10):
     keyword = request.args.get('search')
     if keyword == "":
         return redirect(url_for("book"))
@@ -140,7 +140,7 @@ def find_book(limit=12):
 
 # 查找资讯，并分页显示
 @app.route("/find_csdn/")
-def find_csdn(limit=12):
+def find_csdn(limit=8):
     keyword = request.args.get('search')
     if keyword == "":
         return redirect(url_for("information"))
@@ -200,7 +200,7 @@ def book_detail(id):
         return render_template("book_detail.html", data=data)
 
 
-# 个性化推荐
+# 个性化推荐 资讯
 @app.route("/recommend_information/")
 def recommend_information():
     user = session.get('username')
@@ -219,6 +219,7 @@ def recommend_information():
     return redirect("/")
 
 
+# 个性化推荐 图书
 @app.route("/recommend_book/")
 def recommend_book():
     user = session.get('username')
