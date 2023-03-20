@@ -252,7 +252,7 @@ def recommend_book():
     return redirect("/")
 
 
-# 最近浏览记录 图表
+# 资讯浏览记录 图表
 @app.route("/recording_information/")
 def recording_information():
     try:
@@ -263,13 +263,15 @@ def recording_information():
         recording_csdn = RecordInformation.query.filter(RecordInformation.user_id == users.id).order_by(
             RecordInformation.id.desc()).paginate(page, per_page=limit)
         data_csdn = recording_csdn.items
-        page_view = []
         data_csdns = []
         for i in data_csdn:
+            data_csdns.append(Csdn.query.filter(Csdn.id == i.information_id).first())
+        page_view = []
+        echarts = RecordInformation.query.filter(RecordInformation.user_id == users.id).all()
+        for i in echarts:
             page_view.append(Counter({
                 i.time.strftime("%Y/%m/%d"): 1
             }))
-            data_csdns.append(Csdn.query.filter(Csdn.id == i.information_id).first())
         data = Counter(dict())
         for item in page_view:
             data = Counter(dict(data + item))
@@ -320,18 +322,19 @@ def recording_book():
         page = request.args.get('page', 1, type=int)
         limit = 8
         user = session.get("username")
-        print(user)
         users = Users.query.filter(Users.username == user).first()
         recording_book = RecordBook.query.filter(RecordBook.user_id == users.id).order_by(
             RecordBook.id.desc()).paginate(page, per_page=limit)
         data_book = recording_book.items
-        page_view = []
         data_books = []
         for i in data_book:
+            data_books.append(Douban.query.filter(Douban.id == i.book_id).first())
+        page_view = []
+        echarts = RecordBook.query.filter(RecordBook.user_id == users.id).all()
+        for i in echarts:
             page_view.append(Counter({
                 i.time.strftime("%Y/%m/%d"): 1
             }))
-            data_books.append(Douban.query.filter(Douban.id == i.book_id).first())
         data = Counter(dict())
         for item in page_view:
             data = Counter(dict(data + item))
@@ -437,6 +440,31 @@ def difference(id):
     except Exception as e:
         print(e)
     return redirect(request.host_url)
+
+
+@app.route("/feedback/", methods=['get', 'post'])
+def feedback():
+    if request.method == 'POST':
+        username = session.get("username")
+        if username:
+            score = request.form.get("score")
+            feedbacks = request.form.get("feedback")
+            print(score, feedbacks)
+            if score:
+                score = int(score)
+                if score not in range(1, 11):
+                    return redirect("/feedback/")
+                elif len(feedbacks) >= 100:
+                    return redirect("/feedback/")
+                else:
+                    user = Users.query.filter(Users.username == username).first()
+                    new_feedback = Feedback(user_id=user.id, score=score, feedback=feedbacks)
+                    db.session.add(new_feedback)
+                    db.session.commit()
+                    return "提交成功"
+            return redirect("/feedback/")
+        return redirect("/feedback/")
+    return render_template("feedback.html")
 
 
 if __name__ == '__main__':

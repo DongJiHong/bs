@@ -120,6 +120,14 @@ class Scene(db.Model):
     time = db.Column(db.String(50))
 
 
+class Feedback(db.Model):
+    __tablename__ = "feedback"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+    feedback = db.Column(db.String(1000))
+
+
 # 旁白推荐和名言
 def aside():
     data_douban = Douban.query.filter().order_by(func.rand()).limit(9)
