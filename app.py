@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap4
 from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from CF_ITEM_PYTHON import InformationItemRecommend, BookItemRecommend
+from CF_ITEM_PYTHON import BookItemRecommends, InformationItemRecommends
 from conf import *
 
 bootstrap = Bootstrap4(app)
@@ -172,8 +172,8 @@ def find_csdn(limit=8):
 # 跳转资讯详情页，并存入用户访问记录
 @app.route('/information_detail/<int:id>')
 def information_detail(id):
+    data = Csdn.query.filter(Csdn.id == id).first()
     try:
-        data = Csdn.query.filter(Csdn.id == id).first()
         Csdn.query.filter_by(id=id).update({"browse": data.browse + 1})
         user = session.get('username')
         if user:
@@ -225,7 +225,7 @@ def recommend_information():
         pagination = int(num / limit)  # 总页数
         user = Users.query.filter(Users.username == user).first()
         user_id = user.id
-        information_recommend = InformationItemRecommend(user_id).recommend(num)
+        information_recommend = InformationItemRecommends(user_id).recommend(num)
         start = (page - 1) * limit
         finish = page * limit
         information_data = information_recommend[start:finish]
@@ -244,7 +244,7 @@ def recommend_book():
         pagination = int(num / limit)  # 总页数
         user = Users.query.filter(Users.username == user).first()
         user_id = user.id
-        book_recommend = BookItemRecommend(user_id).recommend(num)
+        book_recommend = BookItemRecommends(user_id).recommend(num)
         start = (page - 1) * limit
         finish = page * limit
         book_data = book_recommend[start:finish]
@@ -310,7 +310,8 @@ def recordingInformation(limit=8):
         data = [item for item in dict(data).values()]
         pagination = Csdn.query.filter(or_(
             Csdn.title.contains(keyword), Csdn.name.contains(keyword), Csdn.content.contains(keyword)),
-            Csdn.id.in_(information_id)).paginate(page, per_page=limit)
+            Csdn.id.in_(information_id)
+        ).paginate(page, per_page=limit)
         return render_template("recording_information.html", data_csdn=pagination.items, csdn=pagination, date=date,
                                data=data)
 

@@ -120,12 +120,30 @@ class Scene(db.Model):
     time = db.Column(db.String(50))
 
 
+# 推荐评分表篇
 class Feedback(db.Model):
     __tablename__ = "feedback"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer)
     score = db.Column(db.Integer)
     feedback = db.Column(db.String(1000))
+
+
+# 推荐表
+class Recommend(db.Model):
+    __tablename__ = "recommend"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    recommend_id = db.Column(db.Integer, autoincrement=True)
+    user_id = db.Column(db.Integer)
+    genre = db.Column(db.Integer)  # 0-book 1-information
+
+
+# 推荐结果表
+class RecommendItem(db.Model):
+    __tablename__ = "recommend_item"
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    recommend_id = db.Column(db.Integer)
+    info_id = db.Column(db.Integer)
 
 
 # 旁白推荐和名言
