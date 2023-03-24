@@ -133,7 +133,6 @@ class Feedback(db.Model):
 class Recommend(db.Model):
     __tablename__ = "recommend"
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    recommend_id = db.Column(db.Integer, autoincrement=True)
     user_id = db.Column(db.Integer)
     genre = db.Column(db.Integer)  # 0-book 1-information
 

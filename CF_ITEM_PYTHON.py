@@ -1,7 +1,7 @@
 # coding:utf-8
 import difflib
 
-from conf import Csdn, Douban, Users, RecordInformation, RecordBook, RecommendItem, Recommend, db
+from conf import Csdn, Douban, Users, RecordInformation, RecordBook, db, Recommend, RecommendItem
 
 """
      # information
@@ -9,7 +9,7 @@ from conf import Csdn, Douban, Users, RecordInformation, RecordBook, RecommendIt
      根据label筛选出有相同字段的数据
      再根据label组成的列表计算数据的相似度，
      针对相识度进行排序，去除用户已经浏览的，取最高的 {{ ## }} 条数据，返回推荐数据
-     
+
      # book
      初始化获得传入的用户id，根据用户id查询用户的label
      根据label筛选出有相同字段的数据
