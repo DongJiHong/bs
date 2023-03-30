@@ -19,7 +19,7 @@
     <div class="form row">
         <h2 style="text-align: center">欢迎来到Mundana智慧校园系统</h2>
         <form class="form-horizontal col-sm-offset-3 col-md-offset-3" method="post">
-            <h3 class="form-title">登录</h3>
+            <h3 class="form-title">管理员登录</h3>
             <div class="col-sm-9 col-md-9">
                 <div class="form-group">
                     <!--        用户名图标和用户名输入框            -->
@@ -40,18 +40,10 @@
                         {{ message }}
                     {% endfor %}
                 </div>
-                <!--        用超链接跳转到注册页面               -->
-                <div class="form-group">
-                    <br>
-                    <a href="/register" style="color:#e9ecef">没有账号？立即注册</a>
-                </div>
                 <!--         登录按钮           -->
                 <div class="form-group">
-                    <a href="/" style="color: white;background-color: #5cb85c; padding: 5px;" class="btn btn-success">前往主页,以游客身份访问</a>
-                    &nbsp;&nbsp;&nbsp;
                     <a href="/admin" style="color: white;background-color: #5cb85c; padding: 5px;"
-                       class="btn btn-success">管理员登录</a>
-
+                       class="btn btn-success">普通用户登录</a>
                     <input type="submit" value="登录" class="btn btn-success pull-right">
                 </div>
             </div>

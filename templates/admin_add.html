@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>Login</title>
+    <title>register</title>
     <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <!--font-awesome 核心我CSS 文件-->
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -11,6 +11,15 @@
     <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
     <!-- Bootstrap 核心 JavaScript 文件 -->
     <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../static/js/fSelect.js"></script>
+    <script>
+        (function ($) {
+            $(function () {
+                window.fs_test = $('.test').fSelect();
+            });
+        })(jQuery);
+    </script>
 </head>
 <body background="../static/assets/img/demo/9.jpg" style="color:white">
 
@@ -19,8 +28,8 @@
     <div class="form row">
         <h2 style="text-align: center">欢迎来到Mundana智慧校园系统</h2>
         <form class="form-horizontal col-sm-offset-3 col-md-offset-3" method="post">
-            <h3 class="form-title">登录</h3>
-            <div class="col-sm-9 col-md-9">
+            <h3 class="form-title">注册管理员账户</h3>
+            <div class="col-sm-9 col-md-9" id="d1" style="display:block">
                 <div class="form-group">
                     <!--        用户名图标和用户名输入框            -->
                     <label>用户名:</label>
@@ -35,29 +44,23 @@
                     <input class="form-control " type="password" name="password" id="password" placeholder="请输入密码"
                            required>
                 </div>
-                <div class="form-group" style="color: red">
-                    {% for message in get_flashed_messages() %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-                <!--        用超链接跳转到注册页面               -->
                 <div class="form-group">
-                    <br>
-                    <a href="/register" style="color:#e9ecef">没有账号？立即注册</a>
+                    <label>确认密码:</label>
+                    <i class="fa fa-key" aria-hidden="true"></i>
+                    <input class="form-control " type="password" name="password2" id="password2" placeholder="请再次输入密码"
+                           required>
                 </div>
+                {% for message in get_flashed_messages() %}
+                    <div class="form-group" style="color: red">{{ message }}</div>
+
+                {% endfor %}
                 <!--         登录按钮           -->
                 <div class="form-group">
-                    <a href="/" style="color: white;background-color: #5cb85c; padding: 5px;" class="btn btn-success">前往主页,以游客身份访问</a>
-                    &nbsp;&nbsp;&nbsp;
-                    <a href="/admin" style="color: white;background-color: #5cb85c; padding: 5px;"
-                       class="btn btn-success">管理员登录</a>
-
-                    <input type="submit" value="登录" class="btn btn-success pull-right">
+                    <input type="submit" value="注册" class="btn btn-success pull-right">
                 </div>
             </div>
         </form>
     </div>
 </div>
-
 </body>
 </html>

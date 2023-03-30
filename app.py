@@ -17,6 +17,364 @@ app.secret_key = "username"
 app.permanent_session_lifetime = datetime.timedelta(seconds=10 * 60)
 
 
+# 管理员登录
+@app.route("/admin/", methods=['GET', 'POST'])
+def admin_login():
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if not all([username, password]):
+            flash('参数不完整')
+        admin = Admin.query.filter(Admin.username == username).first()
+        if admin:
+            token = check_password_hash(admin.password, password)
+            if token:
+                session.permanent = True
+                session['grade'] = admin.grade
+                session['admin'] = username
+                # return "admin"
+                return redirect("/Index")
+            else:
+                flash("密码错误")
+        else:
+            flash("用户名错误")
+    return render_template("admin_login.html")
+
+
+# 管理员主界面
+@app.route('/Index/', methods=['GET', 'POST'])
+def admin_index():
+    limit = 10
+    page = request.args.get('page', 1, type=int)
+    admin_list = Admin.query.paginate(page, per_page=limit)
+    return render_template("admin_index.html", admin=admin_list.items, pagination=admin_list)
+
+
+# 新建管理员
+@app.route('/add/', methods=['GET', 'POST'])
+def admin_add():
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+        password2 = request.form.get('password2')
+        if not all([username, password, password2]):
+            flash('参数不完整')
+        elif len(username) < 4:
+            flash('用户名太短')
+        elif password != password2:
+            flash('两次密码不一致,请重新输入')
+        elif len(password) < 6:
+            flash('密码长度太短,请重新输入')
+        else:
+            user = Admin.query.filter(Admin.username == username).first()
+            if user:
+                flash('用户名已存在,请重新输入')
+            else:
+                password_hash = generate_password_hash(password)
+                new_admin = Admin(username=username, password=password_hash, id=None, grade=False)
+                # 添加提交
+                db.session.add(new_admin)
+                db.session.commit()
+            return redirect("/Index/")
+    return render_template("admin_add.html")
+
+
+# 管理员修改
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+def admin_update(id):
+    admin = Admin.query.filter(Admin.id == id).first()
+    if request.method == "POST":
+        username = request.form.get('username', '')
+        password = request.form.get('password', '')
+        if len(username) < 4:
+            flash('用户名太短')
+        elif len(password) < 6:
+            flash('密码长度太短,请重新输入')
+        elif username == "" and password == "":
+            flash("请输入修改信息")
+        else:
+            user = Admin.query.filter(Admin.username == username).first()
+            if user.id != admin.id:
+                flash('用户名已存在,请重新输入')
+            else:
+                if username == "":
+                    password_hash = generate_password_hash(password)
+                    admin.password = password_hash
+                elif password == "":
+                    admin.username = username
+                else:
+                    password_hash = generate_password_hash(password)
+                    admin.password = password_hash
+                    admin.username = username
+                db.session.commit()
+                return redirect("/Index")
+    return render_template("admin_update.html", admin=admin)
+
+
+# 管理员删除
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def admin_delete(id):
+    Admin.query.filter(Admin.id == id).delete()
+    db.session.commit()
+    return redirect("/Index")
+
+
+# 用户管理
+@app.route('/user/', methods=['GET', 'POST'])
+def admin_user():
+    limit = 10
+    page = request.args.get('page', 1, type=int)
+    user = Users.query.paginate(page, per_page=limit)
+    return render_template("user.html", user=user.items, pagination=user)
+
+
+# 修改用户
+@app.route('/user_update/<int:id>', methods=['GET', 'POST'])
+def user_update(id):
+    user = Users.query.filter(Users.id == id).first()
+    if request.method == "POST":
+        password = request.form.get('password', '')
+        if len(password) < 6:
+            flash('密码长度太短,请重新输入')
+        else:
+            password_hash = generate_password_hash(password)
+            user.password = password_hash
+            db.session.commit()
+            return redirect("/user")
+    return render_template("user_update.html", user=user)
+
+
+# 用户删除
+@app.route('/user_delete/<int:id>', methods=['GET', 'POST'])
+def user_delete(id):
+    Users.query.filter(Users.id == id).delete()
+    db.session.commit()
+    return redirect("/user")
+
+
+# 校园动态管理
+@app.route('/trends/', methods=['GET', 'POST'])
+def admin_trends():
+    limit = 10
+    page = request.args.get('page', 1, type=int)
+    trends = Trends.query.order_by(Trends.pub_time.desc()).paginate(page, per_page=limit)
+    return render_template("trends.html", trends=trends.items, pagination=trends)
+
+
+# 修改校园动态
+@app.route('/trends_update/<int:id>', methods=['GET', 'POST'])
+def trends_update(id):
+    trends = Trends.query.filter(Trends.id == id).first()
+    if request.method == "POST":
+        title = request.form.get('title', '')
+        if title == "":
+            flash('请输入标题')
+        else:
+            trends.title = title
+            db.session.commit()
+            return redirect("/trends")
+    return render_template("trends_update.html", trends=trends)
+
+
+# 删除校园动态
+@app.route('/trends_delete/<int:id>', methods=['GET', 'POST'])
+def trends_delete(id):
+    Trends.query.filter(Trends.id == id).delete()
+    db.session.commit()
+    return redirect("/trends")
+
+
+# 添加校园动态
+@app.route('/trends_add/', methods=['GET', 'POST'])
+def trends_add():
+    if request.method == "POST":
+        title = request.form.get('title', '')
+        pub_time = request.form.get('pub_time', '')
+        url = request.form.get('url', '')
+        if not all([title, pub_time, url]):
+            flash('参数不全')
+        else:
+            new_trends = Trends(title=title, pub_time=pub_time, id=None, url=url)
+            # 添加提交
+            db.session.add(new_trends)
+            db.session.commit()
+            return redirect("/trends")
+    return render_template("trend_add.html")
+
+
+# 资讯管理
+@app.route('/informations/', methods=['GET', 'POST'])
+def admin_informations():
+    limit = 10
+    page = request.args.get('page', 1, type=int)
+    informations = Csdn.query.paginate(page, per_page=limit)
+    return render_template("informations.html", informations=informations.items, pagination=informations)
+
+
+# 修改资讯
+@app.route('/informations_update/<int:id>', methods=['GET', 'POST'])
+def informations_update(id):
+    informations = Csdn.query.filter(Csdn.id == id).first()
+    if request.method == "POST":
+        title = request.form.get('title', '')
+        if title == "":
+            flash('请输入标题')
+        else:
+            informations.title = title
+            db.session.commit()
+            return redirect("/informations")
+    return render_template("informations_update.html", informations=informations)
+
+
+# 删除资讯
+@app.route('/informations_delete/<int:id>', methods=['GET', 'POST'])
+def informations_delete(id):
+    Csdn.query.filter(Csdn.id == id).delete()
+    db.session.commit()
+    return redirect("/informations")
+
+
+# 添加资讯
+@app.route('/informations_add/', methods=['GET', 'POST'])
+def informations_add():
+    if request.method == "POST":
+        title = request.form.get('title', '')
+        name = request.form.get('name', '')
+        content = request.form.get('content', '')
+        url = request.form.get('url', '')
+        label = request.form.getlist('label')
+        print(title, name, content, label, url)
+        if not all([title, name, content, label, url]):
+            flash('参数不全')
+        else:
+            label = ",".join(label)
+            print(label)
+            new_informations = Csdn(title=title, name=name, content=content, url=url, label=label, browse=0, likes=0,
+                                    difference=0, popular=0, id=None)
+            # 添加提交
+            db.session.add(new_informations)
+            db.session.commit()
+            return redirect("/informations")
+    return render_template("informations_add.html")
+
+
+# 图书管理
+@app.route('/books/', methods=['GET', 'POST'])
+def admin_books():
+    limit = 10
+    page = request.args.get('page', 1, type=int)
+    books = Douban.query.paginate(page, per_page=limit)
+    return render_template("books.html", books=books.items, pagination=books)
+
+
+# 修改图书
+@app.route('/books_update/<int:id>', methods=['GET', 'POST'])
+def books_update(id):
+    books = Douban.query.filter(Douban.id == id).first()
+    if request.method == "POST":
+        book_name = request.form.get('book_name', '')
+        author = request.form.get('author', '')
+        content = request.form.get('content', '')
+        publication = request.form.get('publication', '')
+        if not all([book_name, author, content, publication]):
+            flash('参数不完')
+        else:
+            book.book_name = book_name
+            book.author = author
+            book.content = content
+            book.publication = publication
+            db.session.commit()
+            return redirect("/books")
+    return render_template("books_update.html", books=books)
+
+
+# 删除图书
+@app.route('/books_delete/<int:id>', methods=['GET', 'POST'])
+def books_delete(id):
+    Douban.query.filter(Douban.id == id).delete()
+    db.session.commit()
+    return redirect("/books")
+
+
+# 添加图书
+@app.route('/books_add/', methods=['GET', 'POST'])
+def books_add():
+    if request.method == "POST":
+        book_name = request.form.get('book_name', '')
+        author = request.form.get('author', '')
+        content = request.form.get('content', '')
+        publication = request.form.get('publication', '')
+        url = request.form.get('url', '')
+        label = request.form.get('label', "")
+        if not all([book_name, author, content, label, url, publication]):
+            flash('参数不全')
+        else:
+            img_url = "https://img2.doubanio.com/view/subject/s/public/s4172692.jpg"
+            time = str(datetime.date.today())
+            new_informations = Douban(book_name=book_name, author=author, content=content, url=url, label=label,
+                                      img_url=img_url, price=8, publication=publication, time=time,
+                                      popular=0, id=None)
+            # 添加提交
+            db.session.add(new_informations)
+            db.session.commit()
+            return redirect("/books")
+    return render_template("books_add.html")
+
+
+# 校园风光管理
+@app.route('/scenes/', methods=['GET', 'POST'])
+def admin_scenes():
+    limit = 10
+    page = request.args.get('page', 1, type=int)
+    scenes = Scene.query.order_by(Scene.time.desc()).paginate(page, per_page=limit)
+    return render_template("scenes.html", scenes=scenes.items, pagination=scenes)
+
+
+# 修改校园风光
+@app.route('/scenes_update/<int:id>', methods=['GET', 'POST'])
+def scenes_update(id):
+    scenes = Scene.query.filter(Scene.id == id).first()
+    if request.method == "POST":
+        title = request.form.get('title', '')
+        img_url = request.form.get('ing_url', '')
+        if img_url == "":
+            scenes.title = title
+        elif title == "":
+            scenes.img_url = img_url
+        else:
+            scenes.title = title
+            scenes.img_url = img_url
+        db.session.commit()
+        return redirect("/scenes")
+    return render_template("scenes_update.html", scenes=scenes)
+
+
+# 删除校园风光
+@app.route('/scenes_delete/<int:id>', methods=['GET', 'POST'])
+def scenes_delete(id):
+    Scene.query.filter(Scene.id == id).delete()
+    db.session.commit()
+    return redirect("/scenes")
+
+
+# 添加校园风光
+@app.route('/scenes_add/', methods=['GET', 'POST'])
+def scenes_add():
+    if request.method == "POST":
+        title = request.form.get('title', '')
+        time = request.form.get('time', '')
+        img_url = request.form.get('img_url', '')
+        if not all([title, time, img_url]):
+            flash('参数不全')
+        else:
+            new_scene = Scene(title=title, time=time, id=None, img_url=img_url)
+            # 添加提交
+            db.session.add(new_scene)
+            db.session.commit()
+            return redirect("/scenes")
+    return render_template("scenes_add.html")
+
+
 # 注册
 @app.route('/register/', methods=['GET', 'POST'])
 def register():

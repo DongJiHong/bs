@@ -116,7 +116,6 @@ class Scene(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     title = db.Column(db.String(1000))  # title
     img_url = db.Column(db.String(100))  # 图片url
-    browse = db.Column(db.Integer)
     time = db.Column(db.String(50))
 
 
@@ -143,6 +142,15 @@ class RecommendItem(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     recommend_id = db.Column(db.Integer)
     info_id = db.Column(db.Integer)
+
+
+# 定义一个用户及密码的数据库
+class Admin(db.Model):
+    __tablename__ = 'admin'
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.String(50))
+    password = db.Column(db.String(255))
+    grade = db.Column(db.Boolean)
 
 
 # 旁白推荐和名言
