@@ -13,8 +13,8 @@ bootstrap = Bootstrap4(app)
 # 字符串随便起
 app.secret_key = "username"
 
-# session 过期时间 10分钟
-app.permanent_session_lifetime = datetime.timedelta(seconds=10 * 60)
+# session 过期时间 30分钟
+app.permanent_session_lifetime = datetime.timedelta(seconds=30 * 60)
 
 
 # 管理员登录
