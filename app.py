@@ -32,7 +32,6 @@ def admin_login():
                 session.permanent = True
                 session['grade'] = admin.grade
                 session['admin'] = username
-                # return "admin"
                 return redirect("/Index")
             else:
                 flash("密码错误")
