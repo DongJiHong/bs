@@ -266,10 +266,14 @@ def informations_update(id):
         informations = Csdn.query.filter(Csdn.id == id).first()
         if request.method == "POST":
             title = request.form.get('title', '')
+            name = request.form.get('name', '')
+            content = request.form.get('content', '')
             if title == "":
                 flash('请输入标题')
             else:
                 informations.title = title
+                informations.name = name
+                informations.content = content
                 db.session.commit()
                 return redirect("/informations")
         return render_template("informations_update.html", informations=informations)
