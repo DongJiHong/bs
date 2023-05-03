@@ -102,21 +102,17 @@ def admin_update(id):
             elif username == "" and password == "":
                 flash("请输入修改信息")
             else:
-                user = Admin.query.filter(Admin.username == username).first()
-                if user.id != admin.id:
-                    flash('用户名已存在,请重新输入')
+                if username == "":
+                    password_hash = generate_password_hash(password)
+                    admin.password = password_hash
+                elif password == "":
+                    admin.username = username
                 else:
-                    if username == "":
-                        password_hash = generate_password_hash(password)
-                        admin.password = password_hash
-                    elif password == "":
-                        admin.username = username
-                    else:
-                        password_hash = generate_password_hash(password)
-                        admin.password = password_hash
-                        admin.username = username
-                    db.session.commit()
-                    return redirect("/Index")
+                    password_hash = generate_password_hash(password)
+                    admin.password = password_hash
+                    admin.username = username
+                db.session.commit()
+                return redirect("/Index")
         return render_template("admin_update.html", admin=admin)
     else:
         return redirect("/admin")
