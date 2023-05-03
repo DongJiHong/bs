@@ -102,15 +102,9 @@ def admin_update(id):
             elif username == "" and password == "":
                 flash("请输入修改信息")
             else:
-                if username == "":
-                    password_hash = generate_password_hash(password)
-                    admin.password = password_hash
-                elif password == "":
-                    admin.username = username
-                else:
-                    password_hash = generate_password_hash(password)
-                    admin.password = password_hash
-                    admin.username = username
+                password_hash = generate_password_hash(password)
+                admin.password = password_hash
+                admin.username = username
                 db.session.commit()
                 return redirect("/Index")
         return render_template("admin_update.html", admin=admin)
