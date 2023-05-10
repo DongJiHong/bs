@@ -934,6 +934,8 @@ def questionnaire():
         # d_3 = request.form.get("4")
         # d_4 = request.form.get("5")
         d_5 = request.form.get("5")
+        if all([d_1, d_2, d_3, d_4]):
+            flash("参数不全")
         new_questionnaire = Questionnaire(d_1=d_1, d_2=d_2, d_3=d_3, d_4=d_4, d_5=d_5)
         db.session.add(new_questionnaire)
         db.session.commit()

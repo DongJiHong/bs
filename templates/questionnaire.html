@@ -58,6 +58,11 @@
                     <i class="fa fa-user" aria-hidden="true"></i>
                     <input class="form-control" type="text" name="5" autofocus>
                 </div>
+                <div class="form-group" style="color: red">
+                    {% for message in get_flashed_messages() %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
                 <div class="form-group">
                     <input type="submit" value="提交" class="btn btn-success pull-right">
                 </div>
