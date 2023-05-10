@@ -159,3 +159,13 @@ def aside():
     data_saying = Saying.query.filter().order_by(func.rand()).limit(1)
     data = [data_douban, data_saying]
     return data
+
+
+class Questionnaire(db.Model):
+    __tablename__ = 'questionnaire'
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    d_1 = db.Column(db.Boolean)
+    d_2 = db.Column(db.Boolean)
+    d_3 = db.Column(db.Boolean)
+    d_4 = db.Column(db.Boolean)
+    d_5 = db.Column(db.Text)

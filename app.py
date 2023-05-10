@@ -919,5 +919,27 @@ def feedback():
     return render_template("feedback.html")
 
 
+# 个性化调差问卷
+@app.route('/questionnaire/', methods=['GET', 'POST'])
+def questionnaire():
+    if request.method == 'POST':
+        # data = {1: True, 0: False}
+        data = {"True": True, "False": False}
+        d_1 = data.get(request.form.get("1"))
+        d_2 = data.get(request.form.get("2"))
+        d_3 = data.get(request.form.get("3"))
+        d_4 = data.get(request.form.get("4"))
+        # d_1 = request.form.get("2")
+        # d_2 = request.form.get("3")
+        # d_3 = request.form.get("4")
+        # d_4 = request.form.get("5")
+        d_5 = request.form.get("5")
+        new_questionnaire = Questionnaire(d_1=d_1, d_2=d_2, d_3=d_3, d_4=d_4, d_5=d_5)
+        db.session.add(new_questionnaire)
+        db.session.commit()
+        return redirect("/recommend_information")
+    return render_template('questionnaire.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
