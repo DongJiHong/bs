@@ -173,9 +173,6 @@ VALUES (77, '防疫专访｜教务处许欢欢：我们还好，你们好好学�
 INSERT INTO bs.trends (id, title, pub_time, url)
 VALUES (78, '学校党委理论学习中心组（扩大）会议专题学习党的二十大精神', '2022-12-05', 'http://www.cqie.edu.cn/html/2/content/22/12/48881.shtml');
 INSERT INTO bs.trends (id, title, pub_time, url)
-VALUES (79, '数字艺术学院党总支举办“图解二十大，共展新画卷”绘画作品征集活动', '2022-12-05',
-        'http://www.cqie.edu.cn/html/2/content/22/12/48880.shtml');
-INSERT INTO bs.trends (id, title, pub_time, url)
 VALUES (80, '2021-2022学年优秀班导师交流会顺利进行', '2022-12-01', 'http://www.cqie.edu.cn/html/2/content/22/12/48824.shtml');
 INSERT INTO bs.trends (id, title, pub_time, url)
 VALUES (81, '我校举办第49期“校友大讲堂”', '2022-12-01', 'http://www.cqie.edu.cn/html/2/content/22/12/48823.shtml');
@@ -7527,4 +7524,4 @@ VALUES (3390, '【21世纪网】国开系”P2P再添新军 小微综合融资�
 INSERT INTO bs.trends (id, title, pub_time, url)
 VALUES (3391, '【重庆晚报】大学生轮滑赛亮相重庆二师', '2015-01-28', 'http://www.cqie.edu.cn/html/2/content/15/01/8850.shtml');
 INSERT INTO bs.trends (id, title, pub_time, url)
-VALUES (3392, '【3158财富黑龙江】大学生自主创业开网店卖创意苔藓', '2015-01-28', 'http://www.cqie.edu.cn/html/2/content/15/01/8849.shtml');
+VALUES (3393, 'test', '2023-04-21', 'https://www.baidu.com/');

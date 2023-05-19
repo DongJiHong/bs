@@ -20,5 +20,5 @@ INSERT INTO bs.admin (id, username, password, grade)
 VALUES (5, 'testadmin1',
         'pbkdf2:sha256:260000$sVfa6YBvl7ZOiKrU$7bc9452a29f9e078436c189f5cd0d00d7cff83ee6e5176ccd523c6e8462b6d9a', 0);
 INSERT INTO bs.admin (id, username, password, grade)
-VALUES (6, 'testadmin3',
-        'pbkdf2:sha256:260000$YAAR0yirp02tRFrI$efc6ba1a06ce150219681e24a5f3e1c8841ee81f76c5d19ad9cfdf8e0f8ade91', 0);
+VALUES (6, 'testadmin33',
+        'pbkdf2:sha256:260000$WPTH4NSPbv7FDBQ1$4f383e285782052812a1330592cc46fbc126f34cb859ad3fc20dc25e635e9392', 0);

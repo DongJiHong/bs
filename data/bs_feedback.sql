@@ -11,3 +11,5 @@ INSERT INTO bs.feedback (id, user_id, score, feedback)
 VALUES (1, 1, 9, '不错');
 INSERT INTO bs.feedback (id, user_id, score, feedback)
 VALUES (3, 1, 9, '不错');
+INSERT INTO bs.feedback (id, user_id, score, feedback)
+VALUES (4, 1, 9, '不错');
